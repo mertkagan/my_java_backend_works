@@ -30,12 +30,6 @@ public class LikeManager implements LikeService {
 
     @Override
     public List<Long> getAllLikesByPostId(Long postId) {
-//        List<Like> likes = likeRepository.findByPostId(postId);
-//
-//        List<LikeResponseByPostId> response = likes.stream()
-//                .map(like -> this.modelMapperService.forResponse().map(like, LikeResponseByPostId.class))
-//                .collect(Collectors.toList());
-//         return response;
 
         List<Like> likes = likeRepository.findByPostId(postId);
         List<Long> userIds = new ArrayList<>();
@@ -58,10 +52,9 @@ public class LikeManager implements LikeService {
         Post post = postService.getPostById(createLikeRequest.getPostId());
 
         if(user != null && post != null ){
-            Like toSave = new Like();
-            toSave.setUser(user);
-            toSave.setPost(post);
-            return likeRepository.save(toSave);
+            Like like = this.modelMapperService.forRequest().map(createLikeRequest, Like.class);
+            this.likeRepository.save(like);
+            return like;
         }else {
             return null;
         }

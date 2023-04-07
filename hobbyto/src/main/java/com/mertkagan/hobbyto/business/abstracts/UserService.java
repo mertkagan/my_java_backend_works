@@ -2,6 +2,7 @@ package com.mertkagan.hobbyto.business.abstracts;
 
 import com.mertkagan.hobbyto.business.requests.CreateUsersRequest;
 import com.mertkagan.hobbyto.business.requests.LoginRequest;
+import com.mertkagan.hobbyto.business.requests.UpdateUserRequestByUserId;
 import com.mertkagan.hobbyto.business.responses.LoginResponse;
 import com.mertkagan.hobbyto.entities.concretes.User;
 
@@ -13,4 +14,7 @@ public interface UserService {
 
 
     User getUserById(Long userId);
+
+
+    void updateOneUserByUserId(Long userId, UpdateUserRequestByUserId updateUserRequestByUserId);
 }

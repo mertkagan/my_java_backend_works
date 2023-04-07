@@ -3,6 +3,7 @@ package com.mertkagan.hobbyto.conrollers;
 import com.mertkagan.hobbyto.business.abstracts.UserService;
 import com.mertkagan.hobbyto.business.requests.CreateUsersRequest;
 import com.mertkagan.hobbyto.business.requests.LoginRequest;
+import com.mertkagan.hobbyto.business.requests.UpdateUserRequestByUserId;
 import com.mertkagan.hobbyto.business.responses.LoginResponse;
 import com.mertkagan.hobbyto.entities.concretes.User;
 import lombok.AllArgsConstructor;
@@ -32,9 +33,14 @@ public class UsersController {
 
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     public User getUserById(@PathVariable Long userId){
         return userService.getUserById(userId);
+    }
+
+    @PutMapping("/update")
+    public void updateOneUserByUserId(@RequestParam Long userId, @RequestBody UpdateUserRequestByUserId updateUserRequestByUserId){
+        userService.updateOneUserByUserId(userId,updateUserRequestByUserId);
     }
 
 

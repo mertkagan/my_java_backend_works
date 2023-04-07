@@ -10,6 +10,7 @@ import com.mertkagan.hobbyto.core.utilities.mappers.ModelMapperService;
 import com.mertkagan.hobbyto.dataAccess.abstracts.PostRepository;
 import com.mertkagan.hobbyto.entities.concretes.City;
 import com.mertkagan.hobbyto.entities.concretes.Post;
+import com.mertkagan.hobbyto.entities.concretes.RelationShip;
 import com.mertkagan.hobbyto.entities.concretes.User;
 import lombok.AllArgsConstructor;
 
@@ -39,13 +40,9 @@ public class PostManager implements PostService {
         List<Post> posts;
         if(userId.isPresent()){
             posts = postRepository.findByUserId(userId.get());
-            List<PostsResponse> response = posts.stream()
-                    .map(post -> this.modelMapperService.forResponse().map(post, PostsResponse.class))
-                    .collect(Collectors.toList());
-            return response;
+        }else {
+            posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "creationDate"));
         }
-
-        posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "creationDate"));
         List<PostsResponse> response = posts.stream()
                 .map(post -> this.modelMapperService.forResponse().map(post, PostsResponse.class))
                 .collect(Collectors.toList());
@@ -61,15 +58,9 @@ public class PostManager implements PostService {
         if(user==null && city==null){
             return null;
         }else {
-            Post toSave = new Post();
-            toSave.setTitle(createPostRequest.getTitle());
-            toSave.setText(createPostRequest.getText());
-            toSave.setEventDate(createPostRequest.getEventDate());
-            toSave.setCreationDate(createPostRequest.getCreationDate());
-            toSave.setImg(createPostRequest.getImg());
-            toSave.setCity(city);
-            toSave.setUser(user);
-            return postRepository.save(toSave);
+            Post post = this.modelMapperService.forRequest().map(createPostRequest, Post.class);
+            this.postRepository.save(post);
+            return post;
         }
 
 

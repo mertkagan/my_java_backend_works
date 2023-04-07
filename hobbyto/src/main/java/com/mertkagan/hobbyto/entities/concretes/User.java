@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="users")
@@ -47,14 +48,28 @@ public class User {
     @Column(name = "email" , nullable = false)
     private String email;
 
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private City city;
+
     @Column(name = "password" , nullable = false)
+    @JsonIgnore
     private String password;
     @Column(name = "profile_pic" , columnDefinition = "varchar(500)")
     private String profilePic;
 
+    @Column(name = "cover_pic" ,columnDefinition = "varchar(500)")
+    private String coverPic;
+
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Like> likes;
+
+    @OneToMany(mappedBy = "followerUser")
+    private Set<RelationShip> followerRelationships;
+
+    @OneToMany(mappedBy = "followedUser")
+    private Set<RelationShip> followedRelationships;
 
 
 

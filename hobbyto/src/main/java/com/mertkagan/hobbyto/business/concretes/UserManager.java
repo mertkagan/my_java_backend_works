@@ -1,10 +1,15 @@
 package com.mertkagan.hobbyto.business.concretes;
 
+import com.mertkagan.hobbyto.business.abstracts.CityService;
 import com.mertkagan.hobbyto.business.abstracts.UserService;
 import com.mertkagan.hobbyto.business.requests.CreateUsersRequest;
 import com.mertkagan.hobbyto.business.requests.LoginRequest;
+import com.mertkagan.hobbyto.business.requests.UpdateUserRequestByUserId;
 import com.mertkagan.hobbyto.business.responses.LoginResponse;
+import com.mertkagan.hobbyto.core.utilities.mappers.ModelMapperService;
+import com.mertkagan.hobbyto.dataAccess.abstracts.CityRepository;
 import com.mertkagan.hobbyto.dataAccess.abstracts.UserRepository;
+import com.mertkagan.hobbyto.entities.concretes.City;
 import com.mertkagan.hobbyto.entities.concretes.Post;
 import com.mertkagan.hobbyto.entities.concretes.User;
 import lombok.AllArgsConstructor;
@@ -12,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -19,6 +25,10 @@ import java.util.Optional;
 public class UserManager implements UserService {
 
     private UserRepository userRepository;
+
+    private CityRepository cityRepository;
+
+    private ModelMapperService modelMapperService;
 
     private PasswordEncoder passwordEncoder;
     @Override
@@ -71,6 +81,42 @@ public class UserManager implements UserService {
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElse(null);
     }
+
+    @Override
+    public void updateOneUserByUserId(Long userId, UpdateUserRequestByUserId updateUserRequestByUserId) {
+        User user = this.userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Geçersiz user Id:" + userId));
+
+        if (updateUserRequestByUserId.getEmail() != null) {
+            user.setEmail(updateUserRequestByUserId.getEmail());
+        }
+
+        if (updateUserRequestByUserId.getName() != null) {
+            user.setName(updateUserRequestByUserId.getName());
+        }
+
+        if (updateUserRequestByUserId.getSurName() != null) {
+            user.setSurName(updateUserRequestByUserId.getSurName());
+        }
+
+        if (updateUserRequestByUserId.getCityId() != null) {
+            City city = this.cityRepository.findById(updateUserRequestByUserId.getCityId())
+                    .orElseThrow(() -> new IllegalArgumentException("Geçersiz city Id:" + updateUserRequestByUserId.getCityId()));
+            user.setCity(city);
+        }
+
+        if (updateUserRequestByUserId.getProfilePic() != null) {
+            user.setProfilePic(updateUserRequestByUserId.getProfilePic());
+        }
+
+        if (updateUserRequestByUserId.getCoverPic() != null) {
+            user.setCoverPic(updateUserRequestByUserId.getCoverPic());
+        }
+
+        this.userRepository.save(user);
+
+
+     }
 
 
 }

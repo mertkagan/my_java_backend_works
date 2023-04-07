@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface CommentService {
     List<CommentsResponse> getAllCommentsWithParam(Optional<Long> userId, Optional<Long> postId);
 
-    Comment createOnePost(CreateCommentRequest createCommentRequest);
+    Comment createOneComment(CreateCommentRequest createCommentRequest);
 }

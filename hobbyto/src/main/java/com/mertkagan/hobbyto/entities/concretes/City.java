@@ -26,4 +26,7 @@ public class City {
 
     @OneToMany(mappedBy = "city")
     private List<Post> posts;
+
+    @OneToMany(mappedBy = "city")
+    private List<User> users;
 }

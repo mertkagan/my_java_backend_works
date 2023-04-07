@@ -62,16 +62,13 @@ public class CommentManager implements CommentService {
     }
 
     @Override
-    public Comment createOnePost(CreateCommentRequest createCommentRequest) {
+    public Comment createOneComment(CreateCommentRequest createCommentRequest) {
         User user = userService.getUserById(createCommentRequest.getUserId());
         Post post = postService.getPostById(createCommentRequest.getPostId());
         if(user != null && post != null){
-            Comment commentSave = new Comment();
-            commentSave.setUser(user);
-            commentSave.setPost(post);
-            commentSave.setCommentText(createCommentRequest.getCommentText());
-            commentSave.setCreatedAt(createCommentRequest.getCreatedAt());
-            return commentRepository.save(commentSave);
+            Comment comment = this.modelMapperService.forRequest().map(createCommentRequest, Comment.class);
+            this.commentRepository.save(comment);
+            return comment;
         }else {
             return  null;
         }
